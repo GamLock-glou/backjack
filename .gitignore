@@ -1,0 +1,14 @@
+app/node_modules
+app/npm-debug.log*
+app/yarn-debug.log*
+app/yarn-error.log*
+
+.bsp
+.idea
+.DS_Store
+.metals/
+.vscode/
+
+api/project/target/
+api/target/
+api/event-store/target
