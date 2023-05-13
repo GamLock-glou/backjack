@@ -12,7 +12,11 @@ val eventStore = (project in file ("./event-store"))
       Dependencies.ciris,
       Dependencies.circeGenericExtra,
       Dependencies.kafka,
-      Dependencies.elasticSearchClient
+      Dependencies.elasticSearchClient,
+      Dependencies.doobiePostgres,
+      Dependencies.doobieCore,
+      Dependencies.doobieHikari,
+      Dependencies.newType
     ) ++ Dependencies.circe
   )
 

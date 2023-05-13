@@ -9,7 +9,7 @@ import org.http4s.dsl.Http4sDsl
 import org.http4s.server.Router
 import org.http4s.circe.{jsonEncoder, jsonOf}
 import cats.implicits._
-import com.theshow.core.http.routes.Protocol.{TokenAndUser, User}
+import com.theshow.core.http.routes.Protocol.{SignInUser, User}
 import com.theshow.core.utils.Token
 import io.circe.Json
 import io.circe.parser._
@@ -17,8 +17,8 @@ import io.circe.generic.auto._
 import org.http4s.circe.CirceEntityCodec._
 
 object Protocol {
-  final case class User(name: String, age: Int)
-  final case class TokenAndUser(token: String, user: User)
+  final case class SignInUser(name: String, password: String)
+  final case class User(name: String, balance: Double, token: String)
 }
 
 case class EventRoutes[F[_]: Async]()
@@ -49,25 +49,24 @@ case class EventRoutes[F[_]: Async]()
 //      }
 //  }
 
-  private val helloRoutes = HttpRoutes.of[F] {
+  private val signInRoutes = HttpRoutes.of[F] {
 
     // curl "localhost:9001/hello/world"
-    case GET -> Root / "hello" / name =>
-      Ok(User(name = "Eugene", age = 21))
-
+//    case GET -> Root / "signin" / name =>
+//      Ok(User(name = name, age = 21))
     // curl -XPOST "localhost:9001/hello" -d "world"
-    case req@POST -> Root / "hello" => {
-      req.as[User].flatMap { user =>
-        val newUser = User(name = user.name, age = user.age + 1)
-        Token.checkToken(req) match {
-          case Some(v) => Ok(TokenAndUser(v, newUser))
-          case None => BadRequest("Token not found")
+    case req@POST -> Root / "signin" => {
+      req.as[SignInUser].flatMap { user =>
+        val newUser = User(name = user.name, balance = 1000, token = "132423543")
+        user match {
+          case _ if(user.password == "111") => Ok(newUser)
+          case _ => BadRequest("User is not found")
         }
       }
     }
   }
 
-  private[http] val httpApp = Seq(helloRoutes).reduce(_ <+> _).orNotFound
+  private[http] val httpApp = Seq(signInRoutes).reduce(_ <+> _).orNotFound
 
   def GetHttpApp(): Kleisli[F, Request[F], Response[F]] = httpApp
 }
