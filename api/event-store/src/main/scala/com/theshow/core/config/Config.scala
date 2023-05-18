@@ -6,14 +6,11 @@ import cats.implicits._
 
 final case class Config(
                          serverConfig: ServerConfig,
-//                         kafkaConfig: KafkaConfig
-                       esConfig: EsConfig,
                        )
 object Config {
   def config[F[_]: Async]: ConfigValue[F, Config] = {
-    //, KafkaConfig.kafkaConfig[F]
-    (ServerConfig.serverConfig[F], EsConfig.esConfig[F])
-      .parMapN((serverConfig, esConfig) => Config(serverConfig, esConfig))
-    //      kafkaConfig
+    //parMapN
+    (ServerConfig.serverConfig[F])
+      .map((serverConfig) => Config(serverConfig))
   }
 }

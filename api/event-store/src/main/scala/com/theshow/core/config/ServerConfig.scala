@@ -12,7 +12,7 @@ final case class ServerConfig(
 
 object ServerConfig {
   def serverConfig[F[_]: Async]: ConfigValue[F, ServerConfig] = (
-    env("PORT").as[Int].default(8080),
+    env("PORT").as[Int].default(4000),
     env("HOST").default("localhost")
   ).parMapN((port, host) => ServerConfig(Port(port), Host(host)))
 }

@@ -2,71 +2,61 @@ package com.theshow.core.http.routes
 
 import cats.data.Kleisli
 import cats.effect.kernel.Async
-import com.theshow.core.domain.Event
-import com.theshow.core.kafka.KafkaProducerAlgebra
-import org.http4s.{HttpRoutes, Request, Response}
+import org.http4s.{HttpApp, HttpRoutes, Request, Response}
 import org.http4s.dsl.Http4sDsl
-import org.http4s.server.Router
-import org.http4s.circe.{jsonEncoder, jsonOf}
 import cats.implicits._
-import com.theshow.core.http.routes.Protocol.{SignInUser, User}
-import com.theshow.core.utils.Token
-import io.circe.Json
-import io.circe.parser._
+import com.theshow.core.domain.{Password, SignInDomain, UserName}
+import com.theshow.core.game.db.user.User
+import com.theshow.core.http.routes.Protocol.{ErrorMessage, LobbiesCustom, LobbyCustom, SignInUser, UserCustom}
+import org.http4s.server.middleware.ErrorHandling
+import org.http4s.server.websocket.WebSocketBuilder
+import org.http4s.websocket.WebSocketFrame
+//import org.http4s.server.Router
+//import org.http4s.circe.{jsonEncoder, jsonOf}
+//import com.theshow.core.utils.Token
+//import io.circe.Json
+//import io.circe.parser._
 import io.circe.generic.auto._
 import org.http4s.circe.CirceEntityCodec._
+import org.http4s.implicits._
 
 object Protocol {
   final case class SignInUser(name: String, password: String)
-  final case class User(name: String, balance: Double, token: String)
+
+  final case class UserCustom(name: String, balance: Double, token: String)
+  final case class ErrorMessage(message: String)
+  final case class LobbiesCustom(rooms: List[LobbyCustom])
+  final case class LobbyCustom(id: Number, room_name: String)
 }
 
-case class EventRoutes[F[_]: Async]()
-    extends Http4sDsl[F] {
-//  private val twinPeaksRawJson: String =
-//    """
-//      |{
-//      |  "show": "Twin Peaks",
-//      |  "ratings": [
-//      |    { "season": 1, "metaScore": 96 },
-//      |    { "season": 2, "metaScore": 95 },
-//      |    { "season": 3, "metaScore": 74 }
-//      |  ]
-//      |}""".stripMargin
-//
-//  private val twinPeaksParsed: Json =
-//    parse(twinPeaksRawJson).getOrElse(Json.Null)
-//  private[routes] val prefix = "/api/v1/event"
-//  val routes: HttpRoutes[F] = HttpRoutes.of[F] {
-//    case req @ POST -> Root => {
-//        implicit val entityDecoder = jsonOf[F, Json]
-//        req
-//          .attemptAs[Json]
-//          .foldF(
-//            _ => BadRequest("And error"),
-//            event => Created("hi")
-//          )
-//      }
-//  }
-
+case class EventRoutes[F[_]: Async]() extends Http4sDsl[F]
+{
   private val signInRoutes = HttpRoutes.of[F] {
-
-    // curl "localhost:9001/hello/world"
-//    case GET -> Root / "signin" / name =>
-//      Ok(User(name = name, age = 21))
-    // curl -XPOST "localhost:9001/hello" -d "world"
+    case GET -> Root / "users" => {
+      Ok(User.findAllUsers)
+    }
     case req@POST -> Root / "signin" => {
       req.as[SignInUser].flatMap { user =>
-        val newUser = User(name = user.name, balance = 1000, token = "132423543")
+        val newUser = UserCustom(name = user.name, balance = 1000, token = "132423543")
         user match {
-          case _ if(user.password == "111") => Ok(newUser)
+          case _ if (user.name == "admin" && user.password == "111") => Ok(newUser)
           case _ => BadRequest("User is not found")
         }
       }
     }
   }
 
-  private[http] val httpApp = Seq(signInRoutes).reduce(_ <+> _).orNotFound
+//  private val lobbyRoutes = HttpRoutes.of[F] {
+//    case GET -> Root / "lobbies" => Ok(LobbiesCustom(List(LobbyCustom(0, "room_1"), LobbyCustom(1, "room_2"), LobbyCustom(2, "room_3"))))
+//    case GET -> Root / "lobby" / lobby_id =>
+//  }
 
-  def GetHttpApp(): Kleisli[F, Request[F], Response[F]] = httpApp
+  private[http] val httpApp = ErrorHandling {
+    Seq(
+      signInRoutes
+    ).reduce(_ <+> _)
+  }.orNotFound
+
+  def getHttpApp(): Kleisli[F, Request[F], Response[F]] = httpApp
+
 }

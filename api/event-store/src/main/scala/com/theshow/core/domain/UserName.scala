@@ -3,7 +3,9 @@ package com.theshow.core.domain
 import io.circe.Codec
 import io.circe.generic.extras.semiauto.deriveUnwrappedCodec
 
-final case class UserName(regret: String) extends AnyVal
+final case class UserName(userName: String) extends AnyVal {
+  override def toString: String = userName
+}
 
 object UserName {
   implicit val codec: Codec[UserName] = deriveUnwrappedCodec[UserName]

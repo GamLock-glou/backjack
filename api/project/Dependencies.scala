@@ -1,7 +1,7 @@
 import sbt._
 
 object Dependencies {
-  private val http4sVersion = "0.23.7"
+  private val http4sVersion = "0.23.18"
 
   private val catEffectVersion = "3.4.9"
 
@@ -23,8 +23,8 @@ object Dependencies {
     "io.circe" %% "circe-parser"
   ).map(_ % circeVersion)
 
-  val http4sEmberClient = http4s("blaze-client");
-  val http4sEmberServer = http4s("blaze-server");
+  val http4sEmberClient = http4s("ember-client");
+  val http4sEmberServer = http4s("ember-server");
   val http4sDsl         = http4s("dsl");
   val http4sCirce       = http4s("circe")
   val catEffect         = "org.typelevel" %% "cats-effect"          % catEffectVersion;
