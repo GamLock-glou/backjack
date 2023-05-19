@@ -1,6 +1,7 @@
 package com.theshow.core.game.db.config
 
 import cats.effect.IO
+import cats.effect.kernel.Async
 import doobie.util.transactor.Transactor
 
 final case class Config(xa: Transactor[IO])
