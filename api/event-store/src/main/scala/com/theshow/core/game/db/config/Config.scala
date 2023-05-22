@@ -7,11 +7,12 @@ import doobie.util.transactor.Transactor
 final case class Config(xa: Transactor[IO])
 
 object Config {
-  def config() = Config(
+  def apply(): Config = Config(
     Transactor.fromDriverManager[IO](
-    "org.postgresql.Driver",
-    "jdbc:postgresql:gamedb",
-    "docker",
-    "docker"
-  ))
+      "org.postgresql.Driver",
+      "jdbc:postgresql:gamedb",
+      "docker",
+      "docker"
+    ))
+
 }

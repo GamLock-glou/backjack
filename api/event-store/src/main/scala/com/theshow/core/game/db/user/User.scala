@@ -14,11 +14,11 @@ final case class User (id: Number, name: String, password: String, money: Double
 object User {
   def getUserByToken(token: String): IO[Option[UserRequest]] = {
     val queryString = "select id, name, money, token from users where token = ?"
-    HC.stream[UserRequest](
+    IO.println("get user") *> HC.stream[UserRequest](
       queryString,
       HPS.set(token),
       100
-    ).compile.toList.map(_.headOption).transact(Config.config.xa).debug()
+    ).compile.toList.map(_.headOption).transact(Config().xa).debug()
   }
   def getUser(name: String, password: String): IO[Option[UserRequest]] = {
     val queryString = "select id, name, money, token from users where name = ? and password = ?"
@@ -26,6 +26,16 @@ object User {
       queryString,
       HPS.set((name, password)),
       100
-    ).compile.toList.map(_.headOption).transact(Config.config.xa).debug()
+    ).compile.toList.map(_.headOption).transact(Config().xa).debug()
   }
+
+  def updateUserMoney(id: Int, bet: Double): IO[Option[UserRequest]] = {
+    IO.println("update user money") *>
+    sql"UPDATE users SET money = money + $bet WHERE id = $id"
+      .update //Update0
+      .withUniqueGeneratedKeys[UserRequest]("id", "name", "money", "token")
+      .transact(Config().xa).debug() //IO[Int]
+      .option
+  }
+
 }
