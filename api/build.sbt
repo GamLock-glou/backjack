@@ -16,7 +16,10 @@ val eventStore = (project in file ("./event-store"))
       Dependencies.doobiePostgres,
       Dependencies.doobieCore,
       Dependencies.doobieHikari,
-      Dependencies.newType
+      Dependencies.newType,
+      Dependencies.lobBack,
+      Dependencies.scalatest,
+      Dependencies.scalatestTest
     ) ++ Dependencies.circe
   )
 

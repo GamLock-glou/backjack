@@ -13,6 +13,8 @@ object Dependencies {
   private val elasticSearchClientVersion = "7.17.9"
   private val doobieVersion = "1.0.0-RC1"
   private val newTypeVersion = "0.4.4"
+  private val logBackVersion = "1.4.6"
+  private val scalaTestVersion = "3.2.15"
 
   private def http4s(branch: String) =
     "org.http4s" %% s"http4s-$branch" % http4sVersion
@@ -38,4 +40,8 @@ object Dependencies {
   val doobieCore = "org.tpolecat" %% "doobie-core" % doobieVersion
   val doobieHikari = "org.tpolecat" %% "doobie-hikari" % doobieVersion
   val newType = "io.estatico" %% "newtype" % newTypeVersion
+  val lobBack = "ch.qos.logback" % "logback-classic" % logBackVersion
+
+  val scalatest = "org.scalatest" %% "scalatest" % scalaTestVersion
+  val scalatestTest = "org.scalatest" %% "scalatest" % scalaTestVersion % Test
 }

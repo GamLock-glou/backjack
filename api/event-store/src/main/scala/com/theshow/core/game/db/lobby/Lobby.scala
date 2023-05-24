@@ -27,7 +27,6 @@ object Lobby {
   }
 
   def updateLobby(lobby_id: Int, value: Int = 1) = {
-    IO(println("UPDATE LOBBY", lobby_id)) *>
     sql"UPDATE lobbies SET users_count = users_count + $value WHERE id = $lobby_id"
       .update //Update0
       .run //ConnectionIO[Int]

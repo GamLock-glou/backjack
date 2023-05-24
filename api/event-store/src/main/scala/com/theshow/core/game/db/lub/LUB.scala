@@ -31,15 +31,15 @@ object LUB {
   }
 
   def deleteLUB(id: Int) = {
-    IO.println("delete") *>
+    IO.println("delete lub") *>
     sql"DELETE FROM lobbies_users_bets WHERE id = $id"
       .update
       .run
       .transact(Config().xa).debug()
   }
 
-  def createWithLobbyLUB(user_id: Int, lobby_id: Int, bet_id: Option[Int]) = {
-    sql"insert into lobbies_users_bets (user_id, lobby_id, bet_id) values ($user_id, $lobby_id, ${bet_id})"
+  def createWithLobbyLUB(user_id: Int, lobby_id: Int) = {
+    sql"insert into lobbies_users_bets (user_id, lobby_id) values ($user_id, $lobby_id)"
       .update.withUniqueGeneratedKeys[Int]("id")
       .transact(Config().xa).debug()
   }
