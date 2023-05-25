@@ -1,31 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
-import { Lobby } from './pages/lobby/Lobby';
+import { Lobbies } from './pages/lobbies/Lobbies';
 import axios from 'axios';
+import { Auth } from './pages/auth/Auth';
+import { User } from './type/type';
+
 
 function App() {
-  useEffect(() => {
-    axios.post('http://localhost:4000/signin', {
-      "name": "admin",
-      "password": "111"
-  })
-    .then((response) => {
-      console.log(response);
-    })
-    .catch((error) => {
-      console.log(error.response);
-    });
-    // axios.get(`http://localhost:4000/hello/world`)
-    // .then((response) => {
-    //   console.log(response);
-    // })
-    // .catch((error) => {
-    //   console.log(error.response);
-    // });
-  },[])
+  const [user, setUser] = useState<User | null>(null)
   return (
     <div className="App">
-      <Lobby />
+      {!user ? <Auth setUser={setUser} />: <Lobbies />}
     </div>
   );
 }

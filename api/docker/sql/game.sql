@@ -33,7 +33,7 @@ CREATE TABLE bets (
   user_id integer NOT NULL,
   lobby_id integer NOT NULL,
   bet decimal NOT NULL DEFAULT 0,
-  is_win integer NOT NULL DEFAULT -1
+  is_win boolean NOT NULL DEFAULT false
 );
 
 -- Users INSERT
@@ -55,9 +55,9 @@ COMMIT;
 
 -- Bets
 INSERT INTO bets (user_id, lobby_id, bet, is_win)
-VALUES (1, 1, 50, 1);
+VALUES (1, 1, 50, true);
 INSERT INTO bets (user_id, lobby_id, bet, is_win)
-VALUES (1, 1, 50, 0);
+VALUES (1, 1, 50, false);
 INSERT INTO bets (user_id, lobby_id, bet, is_win)
-VALUES (2, 2, 500, 1);
+VALUES (2, 2, 500, true);
 
