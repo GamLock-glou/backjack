@@ -6,13 +6,13 @@ Blackjack is a casino banking game. It is the most widely played casino banking 
 
 ### Backend - SCALA
 
-+ http4s = "0.23.18"
-+ catEffect = "3.4.9"
-+ circe = "0.14.1"
-+ doobie = "1.0.0-RC1"
-+ newType = "0.4.4"
-+ logBack = "1.4.6"
-+ scalaTest = "3.2.15"
++ http4s
++ catEffect
++ circe
++ doobie
++ newType
++ logBack
++ scalaTest
 
 ### DataBase
 
