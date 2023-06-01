@@ -32,7 +32,7 @@ Blackjack is a casino banking game. It is the most widely played casino banking 
 
 ### Prerequisites
 
-Please install recent versions of the following before the first lecture:
+Install recent versions of the following:
 - [Scala plug-in](https://www.jetbrains.com/help/idea/discover-intellij-idea-for-scala.html) for IntelliJ IDEA
 - Java Development Kit (JD), such as OpenJDK, e.g. [AdoptOpenJDK](https://adoptopenjdk.net/)
 - [Scala](https://www.scala-lang.org/download/)
