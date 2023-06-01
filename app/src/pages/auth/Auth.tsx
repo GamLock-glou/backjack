@@ -1,26 +1,48 @@
 import { Button, TextField } from "@mui/material"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import styles from "./Auth.module.css"
-import axios from "axios"
 import { User } from "../../type/type"
-import { queries } from "../../api/api"
+import { useAuthUserMutation } from "../../services/UserService"
+import { isFetchBaseQueryError } from "../../services/helpers"
+import { useAppDispatch } from "../../hooks/redux"
+import { setUser } from "../../store/reducers/UserSlice"
+import { Loading } from "../loading/Loading"
+import { useNavigate } from "react-router-dom"
 
 
-interface AuthProps {
-    setUser: (v: User) => void
-}
-
-export const Auth = ({setUser}: AuthProps) => {
-    const [name, setName] = useState<string>("")
-    const [password, setPassword] = useState<string>("")
-    const onClick = () => {
-        // axios.post("http://localhost:4000/signin", {name, password})
-        // .then((response)=>{
-        //     setUser(response.data)
-        // })
-        queries.signin(name, password)
+export const Auth = () => {
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+    const [name, setName] = useState<string>('')
+    const [errorAuthMessage, setErrorAuthMessage] = useState<string>('')
+    const [password, setPassword] = useState<string>('')
+    const [
+        signin,
+        {
+            error,
+            isError,
+            isSuccess,
+            isLoading,
+            data
+        }
+    ] = useAuthUserMutation();
+    useEffect(() => {
+        if(isError) {
+            if(isFetchBaseQueryError(error)) {
+                setErrorAuthMessage(error.data.message)
+            }
+        }
+        if(isSuccess && data) {
+            dispatch(setUser(data))
+        }
+    }, [data, error, isSuccess, isError])
+    const handleSignIn = async () => {
+        await signin({name, password})
     }
     return <div className={styles.authWrapper}>
+        <h1>
+            Wellcom to auth in BlackJack
+        </h1>
         <div className={styles.authTextFieldsWrapper}>
             <TextField
                 value={name}
@@ -36,8 +58,21 @@ export const Auth = ({setUser}: AuthProps) => {
                 variant="standard"
             />
         </div>
-        <div className={styles.authButtonWrapper}>
-            <Button onClick={onClick} variant="outlined">Login</Button>
+        {
+            isLoading ?
+            <Loading /> :
+            <div className={styles.authButtonWrapper}>
+                <Button onClick={handleSignIn} variant="outlined">Login</Button>
+            </div>
+        }
+        {
+            errorAuthMessage &&
+            <div>
+                {errorAuthMessage}
+            </div>
+        }
+        <div className={styles.infoRegBlock}>
+            Are you not registered yet? Click here
         </div>
     </div>
 }

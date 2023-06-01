@@ -1,0 +1,38 @@
+.navBarContainer {
+  width: 100%;
+  height: 60px;
+  background: #d3d3d3;
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  padding: 10px;
+  box-sizing: border-box;
+  position: relative
+}
+
+.navBarIsAuthConatainer {
+  display: flex;
+  align-items: center;
+}
+
+.linkContainer {
+  display: flex;
+  margin-right: 20px;
+}
+
+.linkStyle {
+  margin: 10px;
+  text-decoration: none;
+  color: #000000;
+  font-size: 20px;
+  box-sizing: border-box;
+}
+
+
+.linkStyle:hover {
+  text-decoration:underline;
+}
+
+.activeLinkStyle {
+  text-decoration:underline;
+}

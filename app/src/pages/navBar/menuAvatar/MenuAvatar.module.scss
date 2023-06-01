@@ -1,0 +1,17 @@
+.menuAvatarContainer {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  box-shadow: 0 0 15px rgba(0,0,0,0.5); /* Параметры тени */
+  background: #ffffff;
+  padding: 20px;
+  font-size: 18px;
+}
+
+.buttonStyle {
+  margin-top: 10px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
